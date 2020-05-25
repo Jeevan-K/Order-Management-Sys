@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "baseUrl": ".",
+        "paths": {
+            "c/orderViewOverride": [
+                "orderViewOverride/orderViewOverride.js"
+            ],
+            "c/orderNewOverride": [
+                "orderNewOverride/orderNewOverride.js"
+            ],
+            "c/orderCaptureScreen": [
+                "orderCaptureScreen/orderCaptureScreen.js"
+            ]
+        }
+    },
+    "include": [
+        "**/*",
+        "../../../../.sfdx/typings/lwc/**/*.d.ts"
+    ],
+    "typeAcquisition": {
+        "include": [
+            "jest"
+        ]
+    }
+}

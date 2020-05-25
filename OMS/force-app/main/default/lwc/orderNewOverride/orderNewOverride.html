@@ -1,0 +1,28 @@
+<template>
+    <lightning-record-edit-form object-api-name="Order" onsuccess={handleSuccess}
+    onsubmit={handleSubmit}>
+        <div class="slds-grid">
+            <div class="slds-col slds-size_1-of-2">
+                <!-- Your lightning-output-field components here -->
+                <lightning-input-field field-name="AccountId">
+                </lightning-input-field>
+                <lightning-input-field field-name="ContractId">
+                </lightning-input-field>
+                <lightning-input-field field-name="Pricebook2Id">
+                </lightning-input-field>
+            </div>
+            <div class="slds-col slds-size_1-of-2">
+                <!-- More lightning-output-field components here -->
+                <lightning-input-field field-name="Status">
+                </lightning-input-field>
+                <lightning-input-field field-name="EffectiveDate">
+                </lightning-input-field>
+            </div>
+        </div>
+            <lightning-button
+                class="slds-m-top_small"
+                type="submit"
+                label="Create new">
+            </lightning-button>
+    </lightning-record-edit-form>
+</template>

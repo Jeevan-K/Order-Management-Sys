@@ -1,0 +1,243 @@
+<template>
+    <lightning-card icon-name="standard:product_consumed" title={screenTitle}>
+        <template if:true={isShowAdd}>
+            <lightning-record-edit-form object-api-name="OrderItem" onsuccess={handleSuccess} onerror={handleError}>
+                <lightning-input-field field-name="OrderId" onchange={saveOrderID}>
+                </lightning-input-field>
+                <lightning-input-field field-name="Product2Id" value={product_id} readonly disabled>
+                </lightning-input-field>
+                <lightning-input-field field-name="UnitPrice" value={unitprice} readonly disabled>
+                </lightning-input-field>
+                <lightning-input-field field-name="Quantity" >
+                </lightning-input-field>
+                <lightning-input-field class="slds-hide" field-name="PricebookEntryId" value={pricebookentryid}></lightning-input-field>
+            
+                <!-- <lightning-input-field field-name="Pricebook2Id" ></lightning-input-field> -->
+                &NonBreakingSpace;
+                <lightning-button 
+                class="slds-m-top_small" 
+                variant="brand" 
+                type="submit" 
+                name="add" 
+                label="Save and Contiue">
+                </lightning-button>
+                &NonBreakingSpace;
+                <lightning-button 
+                class="slds-m-top_small"
+                type = "reset" 
+                label= "Cancel" 
+                onclick={handleClose}></lightning-button>
+            </lightning-record-edit-form>
+        </template>
+    <br>
+
+    <template if:true={showSearch}>
+    <div class="slds-box">
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-col slds-size_1-of-2">
+        <p>Search By : -</p>
+            <select class="slds-select" name = "optionSelect" onchange={changeHandler} >
+            <option value="1">Product Name/Product Code</option>
+            <option value="2">Brand</option>
+            <option value="3">MRP</option>
+        </select> 
+            </div>
+            <!-- Your lightning-output-field components here -->
+        <div class="slds-col slds-col slds-size_1-of-2">
+        <lightning-input type="string" placeholder="Search Product..." value={searchKey_name} onchange={handleKeyNameChange}></lightning-input>
+        </div>
+            <!-- Your lightning-output-field components here -->
+        <!-- <div class="slds-col">
+        <lightning-button onclick={searchProduct} 
+                                variant="brand"
+                                label="Search"
+                                icon-name="utility:search">
+        </lightning-button>
+        </div> -->
+        </div>
+        <div class="slds-align_absolute-center" style="height:5rem">
+            <lightning-button onclick={searchProduct} 
+                                    variant="brand"
+                                    label="Search"
+                                    icon-name="utility:search">
+            </lightning-button>
+        </div>
+        <div if:true={noRecordsFound} class="slds-notify_container slds-is-relative">
+            <div class="slds-notify slds-notify_toast slds-theme_error" role="alert">
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">No Records Found...</h2>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="slds-col slds-size_1-of-3">
+            Your lightning-output-field components here 
+            <lightning-input type="string" placeholder="Search by Product MRP"></lightning-input>
+        </div> -->
+    </div>
+</template>
+    <br>
+    <template if:true={isshow}>
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+            <thead>
+                <tr class="slds-text-title_caps">
+                    <th scope="col">
+                        <div class="slds-truncate" title="S.no">S.no</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Product Name One">Product Name</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Product Code One">Product Code</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Brand One">Brand</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Stock Quantity One">Stock Quantity</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="MRP One">MRP</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Add Product One">Add Product</div>
+                    </th>
+                   
+                </tr>
+            </thead>
+            <tbody> 
+                <template for:each={products} for:item="product" for:index="count">
+                    <tr key = {abc} class="slds-hint-parent">
+                            <td data-label="SL NO">
+                            <div class="slds-truncate" >{count}</div>
+                            </td>
+                            <td data-label="Product Name 2">
+                            <div class="slds-truncate" >{product.Product2.Name}</div>
+                            </td>
+                            <td data-label="Product Code 2">
+                            <div class="slds-truncate" >{product.ProductCode}</div>
+                            </td>
+                            <td data-label="Brand 2">
+                            <div class="slds-truncate" >{product.Product2.Brand__c}</div>
+                            </td>
+                            <td data-label="Stock Quantity 2">
+                            <div class="slds-truncate" >{product.Product2.Stock_Quantity__c}</div>
+                            </td>
+                            <td data-label="Unit Price 2">
+                            <div class="slds-truncate" >{product.UnitPrice}</div>
+                            </td>
+                            <td data-label="Add 2">
+                            <div class="slds-truncate" >
+                                <lightning-button variant="brand" icon-name="utility:add" label="Add" onclick={handleAdd} value = {count}></lightning-button></div>
+                            </td>
+                    </tr>
+                </template>        
+            </tbody>
+            </table>
+        
+    </template>
+    <template if:true={isShowFinalOrder}>
+        <!-- <div class="slds-text-heading--large">Order Summary</div> -->
+        <!-- <br> -->
+        <h3 class="slds-section-title--divider">Order Items</h3>
+        <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered">
+            <thead>
+            <tr class="slds-line-height_reset">
+                <th class="" scope="col">
+                <div class="slds-truncate" title="Product Name 3">Product Name</div>
+                </th>
+                <th class="" scope="col">
+                <div class="slds-truncate" title="Product Code 3">Product Code</div>
+                </th>
+                <th class="" scope="col">
+                <div class="slds-truncate" title="Brand Name 3">Brand Name</div>
+                </th>
+                <th class="" scope="col">
+                <div class="slds-truncate" title="Stock Quantity 3">Quantity</div>
+                </th>
+                <th class="" scope="col">
+                    <div class="slds-truncate" title="Unit Price 3">Unit Price</div>
+                </th>
+                <th class="" scope="col">
+                    <div class="slds-truncate" title="Total Price 3">Total Price</div>
+                </th>
+                <th class="" scope="col">
+                    <div class="slds-truncate" title="Remove Product 3">Remove Product</div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+                <template for:each={relatedOrderItems} for:item="orderitem" >
+                        <tr key = {abc} class="slds-hint-parent">
+                            <td data-label="Product Name 4">
+                            <div class="slds-truncate" >{orderitem.Product2.Name}</div>
+                            </td>
+                            <td data-label="ProductCode 4">
+                            <div class="slds-truncate" >{orderitem.Product2.ProductCode}</div>
+                            </td>
+                            <td data-label="Brand 4">
+                            <div class="slds-truncate" >{orderitem.Product2.Brand__c}</div>
+                            </td>
+                            <td data-label="Quantity 4">
+                            <div class="slds-truncate" >{orderitem.Quantity}</div>
+                            </td>
+                            <td data-label="Unit Price 4 ">
+                                <div class="slds-truncate" >{orderitem.UnitPrice}</div>
+                            </td>
+                            <td data-label="TotalPrice 4">
+                                <div class="slds-truncate" >{orderitem.TotalPrice}</div>
+                            </td>
+                            <td data-label="Action Delete 4">
+                                <div class="slds-truncate" >
+                                    <lightning-button label=Remove icon-name="action:delete" onclick={handleRemove} value = {orderitem.Id}></lightning-button>
+                                </div>
+                            </td>
+                        </tr>
+                </template>        
+            </tbody>
+            </table>
+            <br>
+            <h3 class="slds-section-title--divider">Order Details</h3>
+            <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered">
+                <thead>
+                <tr class="slds-line-height_reset">
+                    <th class="" scope="col">
+                    <div class="slds-truncate" title="Order Number">Order Number</div>
+                    </th>
+                    <th class="" scope="col">
+                    <div class="slds-truncate" title="Order Quantity">Order Quantity</div>
+                    </th>
+                    <th class="" scope="col">
+                    <div class="slds-truncate" title="Order Total Price">Order Total Price</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                    <tr class="slds-hint-parent">
+                        <td data-label="orderNumber">
+                        <div class="slds-truncate" >{orderNumber}</div>
+                        </td>
+                        <td data-label="orderTotalQuantity">
+                        <div class="slds-truncate" >{orderTotalQuantity}</div>
+                        </td>
+                        <td data-label="orderTotalPrice">
+                        <div class="slds-truncate" >{orderTotalPrice}</div>
+                        </td>
+                    </tr>      
+            </tbody>
+            </table>
+            <div class="slds-align_absolute-center" style="height:5rem">
+                <lightning-button  onclick={cancelProduct} 
+                                        variant="Destructive"
+                                        label="Cancel Order"
+                                        icon-name="action:close">
+                </lightning-button>
+                &NonBreakingSpace;&nbsp;
+                <lightning-button if:true={showConfirmOrder} onclick={handleConfirmOrder} 
+                                        variant="Success"
+                                        label="Confirm Order"
+                                        icon-name="action:approval">
+                </lightning-button>
+            </div>
+    </template>
+    </lightning-card>
+</template>

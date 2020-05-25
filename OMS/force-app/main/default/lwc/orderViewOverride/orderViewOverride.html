@@ -1,0 +1,30 @@
+<template>
+    <lightning-card title="Order" icon-name="action:new_task">
+    
+    <lightning-record-view-form object-api-name="Order" record-id={recordId} >
+        <div class="slds-box">
+        <div class="slds-grid">
+            <div class="slds-col slds-size_1-of-2">
+                <!-- Your lightning-output-field components here -->
+                <lightning-output-field field-name="AccountId">
+                </lightning-output-field>
+                <lightning-output-field field-name="ContractId">
+                </lightning-output-field>
+                <lightning-output-field field-name="Status">
+                </lightning-output-field>
+                <lightning-output-field field-name="Order_Confirmed__c">
+                </lightning-output-field>
+            </div>
+            <div class="slds-col slds-size_1-of-2">
+                <!-- More lightning-output-field components here -->
+                <lightning-output-field field-name="EffectiveDate">
+                </lightning-output-field>
+                <lightning-output-field field-name="TotalAmount">
+                </lightning-output-field>
+            </div>
+        </div>
+    </div>
+    </lightning-record-view-form>
+   
+    </lightning-card>
+</template>
